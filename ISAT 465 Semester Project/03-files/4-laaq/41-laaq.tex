@@ -1,0 +1,18 @@
+\documentclass[main.tex]{subfiles}
+
+\begin{document}
+\subsection{List of Attachments}
+\noindent The following is a list of the attachments uploaded to the 01-atts directory:
+\hfill \break
+
+\begin{python}
+import os
+x=sorted(os.listdir("01-atts"))  
+for index, item in enumerate (x):
+    print str(index+1)+'.',item+'\n'    
+\end{python}
+
+\subsection{Additional Questions}
+N/A
+
+\end{document}

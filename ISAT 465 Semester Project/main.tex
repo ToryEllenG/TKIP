@@ -1,0 +1,42 @@
+\documentclass{report}
+\usepackage{mystyle}
+
+\begin{document}
+
+\subfile{\FilePath/0-title/01-title}
+\tableofcontents
+\listoffigures
+\listoftables
+
+
+\newpage
+\section{Introduction} \label{sec1}
+\subfile{\FilePath/1-intro/11-intro}
+
+\newpage
+\section{Network Diagrams \& Tables} \label{sec2}
+\subfile{\FilePath/2-net/21-net}
+
+\newpage
+\section{Lab Exercises : Results \& Analysis}\label{sec3}
+\subfile{\FilePath/3-ex1/31-ex1}
+
+\newpage
+\section{Lab List of Attachments \& Additional Questions} \label{sec4}
+\subfile{\FilePath/4-laaq/41-laaq}
+
+\section{Lab Observations, Suggestions \& Best Practices} \label{sec5}
+\subfile{\FilePath/5-osbp/51-osbp}
+
+\section{Lab References} \label{sec6}
+\subfile{\FilePath/6-ref/61-ref}
+
+\section{Acknowledgments} \label{sec7}
+\subfile{\FilePath/7-ack/71-ack}
+
+\newpage
+\section{Appendices} \label{sec9}
+\subfile{\FilePath/9-app/91-app}
+
+\end{document}
+

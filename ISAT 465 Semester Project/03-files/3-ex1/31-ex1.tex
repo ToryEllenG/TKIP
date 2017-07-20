@@ -1,0 +1,103 @@
+\documentclass[main.tex]{subfiles}
+
+
+\begin{document}
+\subsection{Exercise 1: }
+\subsubsection{Analysis \& Evidence }
+
+\paragraph{Step 0: Network Diagrams and Preparation}
+\hfill \break
+See Figure \ref{fig:net1} and Table \ref{fig:tbl1} in Section \ref{sec2}
+
+\noindent To begin this exercise, we delve into the TKIP algorithm. Moreover, we researched why it was created, and how it works as an algorithm. To do this, we set up a preliminary network topology to receive packets that were related to the TKIP protocol. 
+
+First, we configured a wireless interface on a DD-WRT flashed Asus Access point as seen in figure \ref{fig:1} below.
+
+\ExecuteMetaData[\FilePath/3-ex1/32-ex1-img]{mtag100}
+
+We also configured the Wireless security settings as seen in figure \ref{fig:2} below. 
+
+\ExecuteMetaData[\FilePath/3-ex1/32-ex1-img]{mtag101}
+
+\paragraph{Step 1:}
+\hfill \break
+
+An example of a TKIP data packet is shown in the figure \ref{fig:packet} below.
+
+\ExecuteMetaData[\FilePath/3-ex1/32-ex1-img]{mtag102}
+
+See figure \ref{fig:TKIPflow} for an example of the flow that TKIP follows.
+\ExecuteMetaData[\FilePath/3-ex1/32-ex1-img]{mtag103}
+ 
+After The TKIP algorithm was investigated, we began to capture packets that would be used as the "Target". We began this by training a Monitoring MacBook to the newly created "TKIPtest" network. Once the MacBook was trained, we then connected an Ubuntu Laptop STA to the AP, and pinged the AP 3 times to generate traffic. After the pings were sent through, we then stopped the wireshark capture, and exported the packets into a file called "tkip\_test3.pcapng" attached. In this file, we then took the packets and viewed the TKIP encrypted data as seen in the figure \ref{fig:encrypt} below.
+
+\ExecuteMetaData[\FilePath/3-ex1/32-ex1-img]{mtag104}
+
+As seen in the figure \ref{fig:encrypt}, the TKIP parameters showing the IV for the packet and the key index are shown. Then using wireshark, we decrypted the packets and navigated to the same packet. This is shown in the figures \ref{fig:decrypt} and \ref{fig:icmpDecrypt}.
+
+\ExecuteMetaData[\FilePath/3-ex1/33-ex1-QAs]{mytag2}
+
+\ExecuteMetaData[\FilePath/3-ex1/33-ex1-QAs]{mytag3}
+
+\ExecuteMetaData[\FilePath/3-ex1/32-ex1-img]{mtag105}
+
+\ExecuteMetaData[\FilePath/3-ex1/32-ex1-img]{mtag106}
+
+As seen in the figures` above, the decrypted packet contained ICMP packets, relating to our ping, as well as the various TKIP parameters that are revealed when the packet is decrypted. These parameters include the Temporal Key (TK) and the Pairwise Master Key (PMK).
+
+Now that we have a Target for our data flow, we will now attempt to replicate the process that TKIP uses (as previously seen in wireshark) through use of a program written in C.
+
+\paragraph{Step 2: Emulating Wireshark Decrypt Process with C}
+\hfill \break
+\noindent 
+
+First, we downloaded the relevant wireshark file in the attachments, namely, \texttt{tkip\_test3.pcap}.
+
+Next, we designated a new directory for the necessary C files. We called this directory \texttt{ISAT465\_SP} and cloned the \texttt{https://github.com/sumnerib/ISAT465\_SP} repository as per the instructions.
+
+\ExecuteMetaData[\FilePath/3-ex1/32-ex1-img]{mtag201}
+\ExecuteMetaData[\FilePath/3-ex1/33-ex1-QAs]{mytag7}
+
+Then, we used the \texttt{make} command to compile from the \texttt{tkip\_driver.c} source file and create an executable that we can use to decrypt our frame.
+
+We were then able to run the program with the command \texttt{./tkip\_driver test3\_frame10051\_tk.txt test3\_encr10051.txt 106 56}. "test3\_frame10051\_tk.txt" is the file containing the Temporal Key taken from Wireshark and "test3\_encr10051.txt" is the frame with the encrypted data we are trying to decrypt. 106 is the length of the frame and 56 is the length of the target. These two txt files are the hex stream copied from Wireshark.
+
+\ExecuteMetaData[\FilePath/3-ex1/32-ex1-img]{mtag202}
+
+\ExecuteMetaData[\FilePath/3-ex1/33-ex1-QAs]{mytag6}
+
+Using the \texttt{tkip\_test3.pcap} file that we had captured earlier in the exercise, we then compared it to the output of the tkip driver c program. See figure \ref{fig:2-3} and \ref{fig:2-4}. Here, we are comparing the IEEE 802.11 Data layer. Confirming, that the correct hex stream is selected. Also in figure \ref{fig:2-4}, you are able to see the decrypted TKIP parameters that wireshark provides. These parameters seen include the TK and the PMK. The TK is required for the decryption used in the tkip driver C program. 
+
+\ExecuteMetaData[\FilePath/3-ex1/32-ex1-img]{mtag203}
+
+\ExecuteMetaData[\FilePath/3-ex1/32-ex1-img]{mtag204}
+
+
+Let's take a look at some of the source code in the \texttt{tkip\_driver.c} file. This can be found in the appendix in section \ref{sec9}.
+
+\ExecuteMetaData[\FilePath/3-ex1/32-ex1-img]{mtag20}
+
+In Figure: \ref{fig:driver1} we see the entry point of our program. It first checks and makes sure that the proper number of arguments are provided, and if not it prints out a help dialogue. Then it reads in the length of the provided data. It then reads in the TK file and the frame file. It prints the data out that it read in as is, and then it converts the data from hexadecimal to raw bytes (stored as unsigned characters).
+
+\ExecuteMetaData[\FilePath/3-ex1/32-ex1-img]{mtag206}
+
+Next, in Figure: \ref{fig:driver2} we see the actual calling the TKIP decryption function implemented by Aircrack. It takes the frame, its length, and the temporal key as arguments. It modifies the given array with the decrypted data. We then print this out on line 101.
+
+\ExecuteMetaData[\FilePath/3-ex1/32-ex1-img]{mtag207}
+
+Figure: \ref{fig:aircrack1} shows us the decrypt\_tkip function implemented by Aircrack. First the function determines how much it needs to offset based on the 802.11 header. Then, it calculates the Per-packet key using the TK. Next, it uses the PPK to decrypt with the WEP decryption function.
+
+\ExecuteMetaData[\FilePath/3-ex1/32-ex1-img]{mtag208}
+
+Next, in Figure: \ref{fig:aircrack2} we can see Phase 1 of generating the PPK. This phase only needs to be done once per session, but for the purposes of Aircrack, both Phase 1 and Phase 2 are computed every time a PPK is calculated. In normal circumstances only Phase 2 is computed with each transmission, in order to make the most efficient use of limited clock cycles.
+
+\ExecuteMetaData[\FilePath/3-ex1/32-ex1-img]{mtag209}
+
+Finally, in Figure: \ref{fig:aircrack3}, we see Phase 2 of the mixing process. This is performed for every transmission and can be precomputed, since the only thing that changes between transmissions is the IV, which is also a sequence counter. Once "key" is populated with the proper data, this function returns and the PPK can be used as the key in the WEP algorithm.
+
+\subsubsection{Key Learning/Takeaways:}
+\hfill \break
+\noindent In this lab / excerise, we learned that aircrack had provided relevant functions used to decrypt the TKIP algorithm. By altering some of the open-source code that aircrack had provided on their github, we were able to input certain hex streams of data, namely the Temporal Key, and the IEEE 802.11 data layer. Learning how to compile and write C-based programs was a large takeaway. Lastly, the biggest takeaway was learning how the packets encrypted by TKIP were structured, as well as how these packets are delivered in the overall algorithm structure. We learned that this algorithm was very complicated, especially when aspects such as the key mixing and computation of the MIC.
+
+
+\end{document}

@@ -1,0 +1,65 @@
+%<*mytag1>
+\begin{questions}[resume,noitemsep,label=\textbf{Q\arabic*:},leftmargin=15mm,labelsep=0.1cm,topsep=0pt]
+\item {}
+\end{questions}
+\begin{answers}[resume,noitemsep,label=\textbf{A\arabic*:},leftmargin=15mm,labelsep=0.1cm,topsep=0pt]
+\item {}
+\end{answers}
+%</mytag1>
+
+%<*mytag2>
+\begin{questions}[resume,noitemsep,label=\textbf{Q\arabic*:},leftmargin=15mm,labelsep=0.1cm,topsep=0pt]
+\item {How did TKIP change the way the IV works from WEP?}
+\end{questions}
+\begin{answers}[resume,noitemsep,label=\textbf{A\arabic*:},leftmargin=15mm,labelsep=0.1cm,topsep=0pt]
+\item {In WEP, the IV was only 24 bits. In addtion to this, WEP also simply concatenates the IV onto the secret key to create the RC4 Encryption key. In TKIP, The IV length is extended to 48 Bits, fed into 2 phase key mixing algorithms, and outputs the RC4 Encryption key. Due to this, the value of the RC4 key is different for each IV value, and the structure of the RC4 key separated into a "old IV" field and a 104 secret key field. Also, the IV is used as a sequence counter in TKIP.}
+\end{answers}
+%</mytag2>
+
+%<*mytag3>
+\begin{questions}[resume,noitemsep,label=\textbf{Q\arabic*:},leftmargin=15mm,labelsep=0.1cm,topsep=0pt]
+\item {What "ingredients" are included in the Phase 1 and Phase 2 key mixing stages?}
+\end{questions}
+\begin{answers}[resume,noitemsep,label=\textbf{A\arabic*:},leftmargin=15mm,labelsep=0.1cm,topsep=0pt]
+\item {In phase 1, The secret session key, the high order 32 bits of the IV and the MAC address are included. In Phase 2, The outputs of Phase 1 are then mixed with the lower 16 bits of the IV (The only part that changes each session).}
+\end{answers}
+%</mytag3>
+
+%<*mytag4>
+\begin{questions}[resume,noitemsep,label=\textbf{Q\arabic*:},leftmargin=15mm,labelsep=0.1cm,topsep=0pt]
+\item {}
+\end{questions}
+\begin{answers}[resume,noitemsep,label=\textbf{A\arabic*:},leftmargin=15mm,labelsep=0.1cm,topsep=0pt]
+\item {}
+\end{answers}
+%</mytag4>
+
+%<*mytag5>
+\begin{questions}[resume,noitemsep,label=\textbf{Q\arabic*:},leftmargin=15mm,labelsep=0.1cm,topsep=0pt]
+\item {}
+\end{questions}
+\begin{answers}[resume,noitemsep,label=\textbf{A\arabic*:},leftmargin=15mm,labelsep=0.1cm,topsep=0pt]
+\item {}
+\end{answers}
+%</mytag5>
+
+%%Step2============================================================
+
+%<*mytag6>
+\begin{questions}[resume,noitemsep,label=\textbf{Q\arabic*:},leftmargin=15mm,labelsep=0.1cm,topsep=0pt]
+\item {What are the outputs of the \texttt{tkip\_driver c} program? Provide evidence. Are these the same as the results provided by Wireshark?}
+\end{questions}
+\begin{answers}[resume,noitemsep,label=\textbf{A\arabic*:},leftmargin=15mm,labelsep=0.1cm,topsep=0pt]
+\item {See figures \ref{fig:2-3} and \ref{fig:2-4}. As seen in the screenshot, these are the same values returned in Wireshark.}
+\end{answers}
+%</mytag6>
+
+
+%<*mytag7>
+\begin{questions}[resume,noitemsep,label=\textbf{Q\arabic*:},leftmargin=15mm,labelsep=0.1cm,topsep=0pt]
+\item {What is the crypto.o file?}
+\end{questions}
+\begin{answers}[resume,noitemsep,label=\textbf{A\arabic*:},leftmargin=15mm,labelsep=0.1cm,topsep=0pt]
+\item {A compiled binary file that contains the cryptographic functions used by Aircrack.}
+\end{answers}
+%</mytag7>

@@ -1,0 +1,12 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+\hfill \break
+The TKIP algorithm was created to alleviate the weak points that were implemented with WEP encryption. TKIP improved on points of WEP, with the design in mind that TKIP should still be used with hardware that was currently running WEP. As a result, there are some limitations that come with using TKIP, including the fact that TKIP was initially made as a temporary fix to WEP. 
+
+TKIP uses the RC4 algorithm. Improving on WEP, TKIP encrypts each data packet with a unique encryption key. 
+
+TKIP first implements a key mixing function that combines the secret root key (128 bit temporal key)  with the IV (Initialization Vector) and STA MAC before sending it to RC4 initialization. This is an improvement from WEP, as WEP simply concatenated the two. Next, there is a sequence counter to protect against replay attacks. If packets come out of order, the access point will reject the packets. Finally, Michael is used. Michael is the Message Integrity Check, known as MIC.
+
+In this lab report / Semester Project, we will be validating the overall TKIP algorithm. Wireshark has a built in function to decrypt the TKIP algorithm, provided that there is access to the Pre-Shared-Key between the access point and the station. Through use of a program written in C, emulation of the decryption process will be executed. This C program is a driver that makes use of the open-source code provided by \texttt{aircrack-ng}, a popular tool commonly used to crack Wi-Fi passwords.
+
+\end{document}
